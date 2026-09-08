@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Treasure Island Game - By Saarba</title>
+    <style>
+        body {
+            background-color: #0b0f19;
+            color: #00ff66;
+            font-family: 'Courier New', Courier, monospace;
+            padding: 20px;
+            max-width: 800px;
+            margin: auto;
+        }
+        #game-output {
+            white-space: pre-wrap;
+            background: #121826;
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px solid #00ff66;
+            height: 300px;
+            overflow-y: auto;
+            margin-bottom: 15px;
+            font-size: 14px;
+        }
+        .input-group {
+            display: flex;
+            gap: 10px;
+        }
+        input[type="text"] {
+            flex: 1;
+            padding: 10px;
+            background: #1c2538;
+            border: 1px solid #00ff66;
+            color: white;
+            font-family: inherit;
+            border-radius: 5px;
+        }
+        button {
+            padding: 10px 20px;
+            background: #00ff66;
+            color: #0b0f19;
+            border: none;
+            font-weight: bold;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+        button:hover {
+            background: #00cc52;
+        }
+    </style>
+</head>
+<body>
+
+    <h2>🏴‍☠️ Treasure Island Game</h2>
+    <div id="game-output"></div>
+    
+    <div class="input-group">
+        <input type="text" id="user-input" placeholder="Type your choice here..." autofocus>
+        <button onclick="handleUserInput()">Submit</button>
+    </div>
+
+    <script>
+        const output = document.getElementById('game-output');
+        const inputField = document.getElementById('user-input');
+        
+        let gameState = 'start';
+
+        function appendOutput(text) {
+            output.innerText += text + "\n";
+            output.scrollTop = output.scrollHeight;
+        }
+
+        function startGame() {
+            appendOutput(`*******************************************************************************
+          |                   |                  |                     |
+ _________|________________.=""_;=.______________|_____________________|_______
+|                   |  ,-"_,=""     `"=.|                  |
+|___________________|__"=._o`"-._        `"=.______________|___________________
+          |                `"=._o`"=._      _`"=._                     |
+ _________|_____________________:=._o "=._."_.-="'"=.__________________|_______
+|                   |    __.--" , ; `"=._o." ,-"""-._ ".   |
+|___________________|_._"  ,. .` ` `` ,  `"-._"-._   ". '__|___________________
+          |           |o`"=._` , "` `; .". ,  "-._"-._; ;              |
+ _________|___________| ;`-.o`"=._; ." ` '`."\ ` . "-._ /_______________|_______
+|                   | |o ;    `"-.o`"=._``  '` " ,__.--o;   |
+|___________________|_| ;     (#) `-.o `"=.`_.--"_o.-; ;___|___________________
+____/______/______/___|o;._    "      `".o|o_.--"    ;o;____/______/______/____
+/______/______/______/_"=._o--._        ; | ;        ; ;/______/______/______/_
+____/______/______/______/__"=._o--._   ;o|o;     _._;o;____/______/______/____
+/______/______/______/______/____"=._o._; | ;_.--"o.--"_/______/______/______/_
+____/______/______/______/______/_____"=.o|o_.--""___/______/______/______/____
+/______/______/______/______/______/______/______/______/______/______/_____ /
+*******************************************************************************`);
+            appendOutput("Welcome to Treasure Island.");
+            appendOutput("You are a pirate! Your mission is to find the treasure.");
+            appendOutput("Your win depends on your luck and logic too.\n");
+            appendOutput("You're at a four way road. Where do you want to go? Type 'left', 'right', 'back' or 'straight'");
+        }
+
+        function handleUserInput() {
+            let val = inputField.value.trim().toLowerCase();
+            if (val === "") return;
+            appendOutput("> " + val);
+            inputField.value = "";
+
+            if (gameState === 'start') {
+                if (val === "left") {
+                    gameState = 'lake';
+                    appendOutput("\nYou've come to a lake. There is an island in the middle of the lake.");
+                    appendOutput("Type 'wait' to wait for a boat. Type 'swim' to swim across.");
+                } else if (val === "straight") {
+                    gameState = 'straight_q';
+                    appendOutput("\nYou have a question. If you guess the correct answer you can go ahead.");
+                    appendOutput("'2,3,5,8,13,xx,xx' use your logical mind and find the missing numbers");
+                } else if (val === "right") {
+                    gameState = 'right_q';
+                    appendOutput("\nYou arrived at a technical password door. There is a logical question.");
+                    appendOutput("Identify the pattern and find the missing numbers:\n1 , 9 , 2 , 8 , 3 , 7 , 4 , x , x");
+                } else {
+                    appendOutput("\nYou are out. MISSION FAIL! GAME OVER!");
+                    gameState = 'game_over';
+                }
+            } 
+            // --- LEFT PATH ---
+            else if (gameState === 'lake') {
+                if (val === "wait") {
+                    gameState = 'house_doors';
+                    appendOutput("\nYou arrive at the island unharmed. There is a house with 3 doors.");
+                    appendOutput("One red, one yellow and one blue. Which colour do you choose?");
+                } else {
+                    appendOutput("\nAttacked by crocodile. MISSION FAIL! GAME OVER!");
+                    gameState = 'game_over';
+                }
+            }
+            else if (gameState === 'house_doors') {
+                if (val === "yellow") {
+                    gameState = 'yellow_puzzle';
+                    appendOutput("\nYou are in front of a large door which has a logical password.");
+                    appendOutput("'20,25,35,50,xx,xx' find the missing numbers.");
+                } else if (val === "red") {
+                    appendOutput("\nYou burned by fire. MISSION FAIL! GAME OVER!");
+                    gameState = 'game_over';
+                } else if (val === "blue") {
+                    gameState = 'blue_puzzle';
+                    appendOutput("\nYou arrived at a door with logical password.");
+                    appendOutput("Identify the pattern and guess the number:\n12 , 21 , 34 , 43 , 56 , xx");
+                } else {
+                    appendOutput("\nYou are out of island. MISSION FAIL! GAME OVER!");
+                    gameState = 'game_over';
+                }
+            }
+            else if (gameState === 'yellow_puzzle') {
+                if (val === "70,95") {
+                    appendOutput("\nYou got the treasure. YOU WIN ! 🎉");
+                } else {
+                    appendOutput("\nYou are burnt. MISSION FAIL! GAME OVER!");
+                }
+                gameState = 'game_over';
+            }
+            else if (gameState === 'blue_puzzle') {
+                if (val === "65") {
+                    appendOutput("\nYou got the treasure. YOU WIN ! 🎉");
+                } else {
+                    appendOutput("\nYou are fired by lasers. MISSION FAIL! GAME OVER!");
+                }
+                gameState = 'game_over';
+            }
+            // --- STRAIGHT PATH ---
+            else if (gameState === 'straight_q') {
+                if (val === "21,34") {
+                    gameState = 'doors_abc';
+                    appendOutput("\nYou got a key and there are three doors in front of you.");
+                    appendOutput("a , b , c - choose one of the doors to search the treasure.");
+                } else {
+                    appendOutput("\nYou fall into a Quicksand. MISSION FAIL! GAME OVER!");
+                    gameState = 'game_over';
+                }
+            }
+            else if (gameState === 'doors_abc') {
+                if (val === "a") {
+                    appendOutput("\nA vampire sucks your blood. MISSION FAIL! GAME OVER!");
+                    gameState = 'game_over';
+                } else if (val === "b") {
+                    appendOutput("\nYou are eaten by a hungry lion. MISSION FAIL! GAME OVER!");
+                    gameState = 'game_over';
+                } else if (val === "c") {
+                    gameState = 'color_door';
+                    appendOutput("\nAnother door asks to pick a colour : white , black , pink ....");
+                } else {
+                    appendOutput("\nYou are out of game. MISSION FAIL! GAME OVER!");
+                    gameState = 'game_over';
+                }
+            }
+            else if (gameState === 'color_door') {
+                if (val === "white") {
+                    appendOutput("\nYou got the treasure. YOU WIN ! 🎉");
+                } else if (val === "black") {
+                    appendOutput("\nToxic gas filled in the room. MISSION FAIL! GAME OVER!");
+                } else if (val === "pink") {
+                    appendOutput("\nYou got hit by a poison arrow. MISSION FAIL! GAME OVER!");
+                } else {
+                    appendOutput("\nYou are out of game. MISSION FAIL! GAME OVER!");
+                }
+                gameState = 'game_over';
+            }
+            // --- RIGHT PATH ---
+            else if (gameState === 'right_q') {
+                if (val === "6,5") {
+                    gameState = 'choose_way';
+                    appendOutput("\nYou choose a way to go further. Type 'jungle', 'city' or 'palace'");
+                } else {
+                    appendOutput("\nYou are eaten by beasts. MISSION FAIL! GAME OVER!");
+                    gameState = 'game_over';
+                }
+            }
+            else if (gameState === 'choose_way') {
+                if (val === "city") {
+                    appendOutput("\nYou got attacked by soldiers. MISSION FAIL! GAME OVER!");
+                    gameState = 'game_over';
+                } else if (val === "jungle") {
+                    appendOutput("\nYou got attacked by tribal arrows. MISSION FAIL! GAME OVER!");
+                    gameState = 'game_over';
+                } else if (val === "palace") {
+                    gameState = 'palace_door';
+                    appendOutput("\nThe palace has high security. Gate has a logical password.");
+                    appendOutput("Hint is : 5 , 10 , 20 , 40 , xx\nThe missing number is the password.");
+                } else {
+                    appendOutput("\nYou are out. MISSION FAIL! GAME OVER!");
+                    gameState = 'game_over';
+                }
+            }
+            else if (gameState === 'palace_door') {
+                if (val === "80") {
+                    appendOutput("\nYou got the treasure. YOU WIN ! 🎉");
+                } else {
+                    appendOutput("\nFloor collapsed you fall. MISSION FAIL! GAME OVER!");
+                }
+                gameState = 'game_over';
+            }
+            else if (gameState === 'game_over') {
+                appendOutput("\nGame is already over! Refresh the page to play again.");
+            }
+        }
+
+        // Enter key press support
+        inputField.addEventListener("keypress", function(event) {
+            if (event.key === "Enter") {
+                handleUserInput();
+            }
+        });
+
+        // Start the game initially
+        window.onload = startGame;
+    </script>
+</body>
+</html>
